@@ -10,24 +10,43 @@ import {
   TarjetaModal,
   TituloModal,
 } from "./styled";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 
 interface NoticiaModalProps {
-  modal: INoticiasNormalizadas | null;
+  modal: INoticiasNormalizadas;
   setModal: (noticia: INoticiasNormalizadas | null) => void;
 }
 
 const NoticiaModal = ({ modal, setModal }: NoticiaModalProps) => {
+  const { esPremium, imagen, titulo, descripcion } = modal;
+
+  const handleUserSuscription = useCallback(() => {
+    setTimeout(() => {
+      alert("Suscripto!");
+      setModal(null);
+    }, 1000);
+  }, [setModal]);
+
   useEffect(() => {
-    function handleEscapeKey(event: KeyboardEvent) {
+    const handleEscapeKey = (event: KeyboardEvent) => {
       if (event.code === "Escape") {
         setModal(null);
       }
-    }
+    };
+
+    const handleEnterKey = (event: KeyboardEvent) => {
+      if (event.code === "Enter") {
+        handleUserSuscription();
+      }
+    };
 
     document.addEventListener("keydown", handleEscapeKey);
-    return () => document.removeEventListener("keydown", handleEscapeKey);
-  }, [setModal]);
+    document.addEventListener("keydown", handleEnterKey);
+    return () => {
+      document.removeEventListener("keydown", handleEscapeKey);
+      document.removeEventListener("keydown", handleEnterKey);
+    };
+  }, [setModal, handleUserSuscription]);
 
   return (
     <ContenedorModal>
@@ -35,36 +54,25 @@ const NoticiaModal = ({ modal, setModal }: NoticiaModalProps) => {
         <CloseButton onClick={() => setModal(null)}>
           <img src={Close} alt="close-button" />
         </CloseButton>
-        {modal?.esPremium ? (
-          <>
-            <ImagenModal src={SuscribeImage} alt="mr-burns-excelent" />
-            <CotenedorTexto>
-              <TituloModal>Suscríbete a nuestro Newsletter</TituloModal>
-              <DescripcionModal>
-                Suscríbete a nuestro newsletter y recibe noticias de nuestros
-                personajes favoritos.
-              </DescripcionModal>
-              <BotonSuscribir
-                onClick={() =>
-                  setTimeout(() => {
-                    alert("Suscripto!");
-                    setModal(null);
-                  }, 1000)
-                }
-              >
-                Suscríbete
-              </BotonSuscribir>
-            </CotenedorTexto>
-          </>
-        ) : (
-          <>
-            <ImagenModal src={modal?.imagen} alt="news-image" />
-            <CotenedorTexto>
-              <TituloModal>{modal?.titulo}</TituloModal>
-              <DescripcionModal>{modal?.descripcion}</DescripcionModal>
-            </CotenedorTexto>
-          </>
-        )}
+        <ImagenModal
+          src={esPremium ? SuscribeImage : imagen}
+          alt={esPremium ? "mr-burns-excelent" : "news-image"}
+        />
+        <CotenedorTexto>
+          <TituloModal>
+            {esPremium ? "Suscríbete a nuestro Newsletter" : titulo}
+          </TituloModal>
+          <DescripcionModal>
+            {esPremium
+              ? "Suscríbete a nuestro newsletter y recibe noticias de nuestros personajes favoritos."
+              : descripcion}
+          </DescripcionModal>
+          {esPremium && (
+            <BotonSuscribir onClick={handleUserSuscription}>
+              Suscríbete
+            </BotonSuscribir>
+          )}
+        </CotenedorTexto>
       </TarjetaModal>
     </ContenedorModal>
   );

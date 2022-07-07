@@ -17,23 +17,33 @@ describe("Quotes", () => {
     });
   });
 
-  describe("After searching for a quote", () => {
-    it("should render the correct quote", async () => {
-      render(<Cita />);
-      const searchButton = screen.getByRole("button", {
-        name: "Obtener cita aleatoria",
+  describe("on search", () => {
+    describe("After searching for a quote without a character input", () => {
+      it("should render the correct quote and character", async () => {
+        render(<Cita />);
+        const searchButton = screen.getByRole("button", {
+          name: "Obtener cita aleatoria",
+        });
+        userEvent.click(searchButton);
+        expect(await screen.findByText("Eat my shorts")).toBeInTheDocument();
+        expect(await screen.findByText("Bart Simpson")).toBeInTheDocument();
       });
-      userEvent.click(searchButton);
-      expect(await screen.findByText("Eat my shorts")).toBeInTheDocument();
     });
 
-    it("should render the correct character", async () => {
-      render(<Cita />);
-      const searchButton = screen.getByRole("button", {
-        name: "Obtener cita aleatoria",
+    describe("After searching for a quote with a character input", () => {
+      it("should render the correct quote and character", async () => {
+        render(<Cita />);
+        const input = screen.getByLabelText("Author Cita") as HTMLInputElement;
+        await userEvent.type(input, "Homer");
+        const searchButton = screen.getByRole("button", {
+          name: "Obtener Cita",
+        });
+        userEvent.click(searchButton);
+        expect(
+          await screen.findByText("I hope I didn't brain my damage.")
+        ).toBeInTheDocument();
+        expect(await screen.findByText("Homer Simpson")).toBeInTheDocument();
       });
-      userEvent.click(searchButton);
-      expect(await screen.findByText("Bart Simpson")).toBeInTheDocument();
     });
   });
 

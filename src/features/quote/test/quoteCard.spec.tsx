@@ -3,6 +3,7 @@ import Cita from "../Cita";
 import userEvent from "@testing-library/user-event";
 
 describe("Quote Card", () => {
+  
   it("should render default text 'No se encontro ninguna cita'", () => {
     render(<Cita />);
     const textNoQuote = screen.getByText("No se encontro ninguna cita");

@@ -52,8 +52,8 @@ export const BioButton = styled.button<IButton>`
     cursor: pointer;
   }
 
-  ${(props) =>
-    props.isActive &&
+  ${({ isActive }) =>
+    isActive &&
     css`
       background-color: #fdd835;
       color: whitesmoke;
