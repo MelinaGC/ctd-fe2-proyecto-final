@@ -1,9 +1,5 @@
 import styled, { css } from "styled-components";
 
-interface IButton {
-  isActive: boolean;
-}
-
 export const BioContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -39,7 +35,7 @@ export const BioButtonContainer = styled.div`
   margin-bottom: 1rem;
 `;
 
-export const BioButton = styled.button<IButton>`
+export const BioButton = styled.button<{isActive: boolean}>`
   border-radius: 5px;
   border: 1px solid darkgray;
   box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.75);
